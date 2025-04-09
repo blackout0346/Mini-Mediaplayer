@@ -14,10 +14,12 @@ private:
     int currentMusic;
     bool isPaused;
     float speed;
+    float scrolling;
 
 public:
     AudioPlayer()
     {
+   
         currentMusic = 0;
         isPaused = false;
         speed = 1.0f;
@@ -48,7 +50,7 @@ public:
 
         if (musicArray.empty())
         {
-            std::cout << "Íåò ôàéëîâ .mp3 â ïàïêå " << MUSIC_FOLDER << std::endl;
+            std::cout << "ÐÐµÑ‚ Ñ„Ð°Ð¹Ð»Ð¾Ð² .mp3 Ð² Ð¿Ð°Ð¿ÐºÐµ " << MUSIC_FOLDER << std::endl;
         }
     }
     std::string GetCurrentSongName()
@@ -57,7 +59,7 @@ public:
         {
             return musicNames[currentMusic]; 
         }
-        return "Íåò ìóçûêè";
+        return "ÐÐµÑ‚ Ð¼ÑƒÐ·Ñ‹ÐºÐ¸";
     }
     std::vector<std::string> GetSongList()
     {
@@ -134,7 +136,10 @@ public:
             SeekMusicStream(musicArray[currentMusic], length * percent);
         }
     }
+    void scrolling()
+    {
 
+    }
     void Update()
     {
         if (!musicArray.empty())
@@ -188,5 +193,8 @@ public:
         }
         return 0.0f;
     }
-   
+    Music GetCurrentMusic()
+    {
+        return musicArray[currentMusic];
+    }
 };
