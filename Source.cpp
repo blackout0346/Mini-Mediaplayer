@@ -27,10 +27,9 @@ int main()
     AudioPlayer audioPlayer;
     Rectangle progressBar = { 100, 600, 1080, 20 };
 
-    bool isPlaying = false; // Отслеживаем, играет ли музыка
 
-    float buttonSize = 50;  // Размер кнопок
-    float buttonY = 630;    // Координата Y для кнопок
+    float buttonSize = 50;  // Р Р°Р·РјРµСЂ РєРЅРѕРїРѕРє
+    float buttonY = 630;    // РљРѕРѕСЂРґРёРЅР°С‚Р° Y РґР»СЏ РєРЅРѕРїРѕРє
 
     Rectangle playButton = { 600, buttonY, buttonSize, buttonSize };
     Rectangle prevButton = { 500, buttonY, buttonSize, buttonSize };
@@ -45,21 +44,23 @@ int main()
      
         Vector2 mousePos = GetMousePosition();
       
-        // Обработка нажатий мышки
+        // РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёР№ РјС‹С€РєРё
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             if (CheckCollisionPointRec(mousePos, playButton))
             {
                 audioPlayer.PlayPause();
-                isPlaying = !isPlaying;  
+             
             }
             if (CheckCollisionPointRec(mousePos, nextButton))
             {
                 audioPlayer.Next();
+          
             }
             if (CheckCollisionPointRec(mousePos, prevButton))
             {
                 audioPlayer.Prev();
+          
             }
         }
 
@@ -67,10 +68,10 @@ int main()
         if (IsKeyPressed(KEY_SPACE))
         {
             audioPlayer.PlayPause();
-            isPlaying = !isPlaying;
+      
         }
         if (IsKeyPressed(KEY_RIGHT)) audioPlayer.Next();
-        if (IsKeyPressed(KEY_LEFT)) audioPlayer.Prev();
+        if (IsKeyPressed(KEY_LEFT)) audioPlayer.Prev(); 
         if (IsKeyPressed(KEY_UP)) audioPlayer.ChangeSpeed(0.1f);
         if (IsKeyPressed(KEY_DOWN)) audioPlayer.ChangeSpeed(-0.1f);
 
@@ -105,11 +106,10 @@ int main()
         DrawText(TextFormat("Speed: %.1fx", audioPlayer.GetSpeed()), 20, 630, 20, RED);
         DrawTexture(prevIcon, prevButton.x, prevButton.y, WHITE);
         DrawTexture(nextIcon, nextButton.x, nextButton.y, WHITE);
-        if (isPlaying)
+        if (IsMusicStreamPlaying(audioPlayer.GetCurrentMusic()))
             DrawTexture(pauseIcon, playButton.x, playButton.y, RED);
         else
             DrawTexture(playIcon, playButton.x, playButton.y, WHITE);
-    
         EndDrawing();
     }
 
