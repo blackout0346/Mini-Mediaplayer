@@ -8,7 +8,6 @@
 
 
 
-
 int main()
 {
     setlocale(LC_ALL, "RUS");
@@ -18,7 +17,7 @@ int main()
     InitAudioDevice();
     SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_ALWAYS_RUN);
     SetTargetFPS(60);
-    
+
     Texture2D playIcon = LoadTexture("Image/Play.png");
     Texture2D prevIcon = LoadTexture("Image/Prev.png");
     Texture2D pauseIcon = LoadTexture("Image/Pause.png");
@@ -127,7 +126,7 @@ int main()
         EndDrawing();
     }
 
-    
+
     UnloadTexture(playIcon);
     UnloadTexture(pauseIcon);
     UnloadTexture(prevIcon);
