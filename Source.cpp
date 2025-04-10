@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "Audio.h"
-
+#include <algorithm>
 
 
 
@@ -47,34 +47,46 @@ int main()
         // Обработка нажатий мышки
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
+           
+
             if (CheckCollisionPointRec(mousePos, playButton))
             {
                 audioPlayer.PlayPause();
-             
+      
+
             }
             if (CheckCollisionPointRec(mousePos, nextButton))
             {
                 audioPlayer.Next();
-          
+                audioPlayer.ScrollDown();
+
             }
             if (CheckCollisionPointRec(mousePos, prevButton))
             {
                 audioPlayer.Prev();
-          
+               
             }
-        }
 
+
+
+
+
+        }
 
         if (IsKeyPressed(KEY_SPACE))
         {
             audioPlayer.PlayPause();
       
         }
-        if (IsKeyPressed(KEY_RIGHT)) audioPlayer.Next();
-        if (IsKeyPressed(KEY_LEFT)) audioPlayer.Prev(); 
+        if (IsKeyPressed(KEY_RIGHT)) audioPlayer.Next(), audioPlayer.ScrollDown();
+        if (IsKeyPressed(KEY_LEFT)) audioPlayer.Prev(),  audioPlayer.ScrollUp();
         if (IsKeyPressed(KEY_UP)) audioPlayer.ChangeSpeed(0.1f);
         if (IsKeyPressed(KEY_DOWN)) audioPlayer.ChangeSpeed(-0.1f);
-
+        if (IsKeyPressed(KEY_S)) audioPlayer.ScrollDown();
+        if (IsKeyPressed(KEY_W)) audioPlayer.ScrollUp();
+        float wheel = GetMouseWheelMove();
+        if (wheel > 0) audioPlayer.ScrollUp();
+        if (wheel < 0) audioPlayer.ScrollDown();
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
         {
             Vector2 mousePos = GetMousePosition();
@@ -100,10 +112,12 @@ int main()
         DrawText(currentTimeText, 20, 600, 20, BLACK);
         DrawText(totalTimeText, 1200, 600, 20, BLACK);
         audioPlayer.DrawMusicList();
+        audioPlayer.CheckSongClick();
         DrawText(audioPlayer.GetCurrentSongName().c_str(), 20, 550, 30, BLACK);
-        DrawText("SPACE - Play/Pause | RIGHT - Next | LEFT - Previous", 20, 20, 20, BLACK);
-        DrawText("UP - Speed Up | DOWN - Slow Down", 20, 50, 20, BLACK);
+        DrawText("SPACE - Play/Pause | RIGHT - Next | LEFT - Previous", 300, 20, 20, BLACK);
+        DrawText("UP - Speed Up | DOWN - Slow Down", 400, 50, 20, BLACK);
         DrawText(TextFormat("Speed: %.1fx", audioPlayer.GetSpeed()), 20, 630, 20, RED);
+      
         DrawTexture(prevIcon, prevButton.x, prevButton.y, WHITE);
         DrawTexture(nextIcon, nextButton.x, nextButton.y, WHITE);
         if (IsMusicStreamPlaying(audioPlayer.GetCurrentMusic()))
