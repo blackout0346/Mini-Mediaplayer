@@ -2,9 +2,12 @@
 #include "raylib.h"
 #include <filesystem>
 #include <string>
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include "Audio.h"
+
+
 #define MUSIC_FOLDER "All/"
 class AudioPlayer
 {
@@ -14,7 +17,7 @@ private:
     int currentMusic;
     bool isPaused;
     float speed;
-    float scrolling;
+    float scrolling = 0;
 
 public:
     AudioPlayer()
@@ -33,7 +36,8 @@ public:
             UnloadMusicStream(music);
         }
     }
-
+    void ScrollUp() { scrolling--; }
+    void ScrollDown() { scrolling++; }
     void LoadMusicFromFolder()
     {
         for (const auto& entry : std::filesystem::directory_iterator(MUSIC_FOLDER))
@@ -136,10 +140,7 @@ public:
             SeekMusicStream(musicArray[currentMusic], length * percent);
         }
     }
-    void scrolling()
-    {
-
-    }
+ 
     void Update()
     {
         if (!musicArray.empty())
@@ -158,11 +159,44 @@ public:
     void DrawMusicList()
     {
         int y = 100;
-        for (size_t i = 0; i < musicNames.size(); i++)
+        int maxView = 15;
+
+        if (scrolling > (int)musicNames.size() - maxView)
         {
+            scrolling = std::max(0, (int)musicNames.size() - maxView);
+        }if (scrolling < 0)
+        {
+            scrolling = 0;
+        }
+        int start = (int)scrolling;
+        for (size_t i = start; i <std::min(start + maxView, (int)musicNames.size()); i++)
+        {
+           
             Color color = (i == currentMusic) ? RED : BLACK;
+   
             DrawText(musicNames[i].c_str(), 50, y, 20, color);
             y += 25;
+      
+        }
+    }
+    void CheckSongClick()
+    {
+        Vector2 mouse = GetMousePosition();
+        int y = 100;
+        int maxView = 15;
+
+        int start = (int)scrolling;
+        int end = std::min(start + maxView, (int)musicNames.size());
+
+        for (int i = start; i < end; i++)
+        {
+            Rectangle rect = { 50, (float)y, 800, 25 }; // Прямоугольник вокруг текста
+            if (CheckCollisionPointRec(mouse, rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                SelectSong(i);
+            }
+            y += 25;
+            DrawRectangleLines(rect.x, rect.y, rect.width, rect.height, GRAY);
         }
     }
     float GetProgress()
@@ -196,5 +230,19 @@ public:
     Music GetCurrentMusic()
     {
         return musicArray[currentMusic];
+    }
+    void SelectSong(int index)
+    {
+
+        if (index >= 0 && index < musicArray.size())
+        {
+            StopMusicStream(musicArray[currentMusic]);
+            currentMusic = index;
+            PlayMusicStream(musicArray[currentMusic]);
+            isPaused = false;
+
+            SetMusicPitch(musicArray[currentMusic], speed);
+
+        }
     }
 };
