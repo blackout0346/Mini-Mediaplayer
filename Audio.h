@@ -27,6 +27,8 @@ public:
         isPaused = false;
         speed = 1.0f;
         LoadMusicFromFolder();
+       
+        
     }
 
     ~AudioPlayer()
@@ -38,6 +40,8 @@ public:
     }
     void ScrollUp() { scrolling--; }
     void ScrollDown() { scrolling++; }
+
+ 
     void LoadMusicFromFolder()
     {
         for (const auto& entry : std::filesystem::directory_iterator(MUSIC_FOLDER))
@@ -56,6 +60,7 @@ public:
         {
             std::cout << "Нет файлов .mp3 в папке " << MUSIC_FOLDER << std::endl;
         }
+
     }
     std::string GetCurrentSongName()
     {
@@ -174,7 +179,8 @@ public:
            
             Color color = (i == currentMusic) ? RED : BLACK;
    
-            DrawText(musicNames[i].c_str(), 50, y, 20, color);
+            DrawText( musicNames[i].c_str(),  50, (float)y, 20, color);
+
             y += 25;
       
         }
@@ -190,7 +196,7 @@ public:
 
         for (int i = start; i < end; i++)
         {
-            Rectangle rect = { 50, (float)y, 800, 25 }; // Прямоугольник вокруг текста
+            Rectangle rect = { 50, (float)y, 800, 25 }; 
             if (CheckCollisionPointRec(mouse, rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 SelectSong(i);
